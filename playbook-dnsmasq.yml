@@ -1,0 +1,7 @@
+---
+- name: SkillFactory 10.9.2
+  hosts: [vm]
+  become: true
+  become_user: root
+  roles:
+    - dnsmasq

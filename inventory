@@ -1,0 +1,2 @@
+[vm]
+terr-vm1 ansible_host=10.10.4.227

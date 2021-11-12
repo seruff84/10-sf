@@ -1,0 +1,52 @@
+---
+# tasks file for dnsmasq
+- name: Run the equivalent of "apt-get update" as a separate step
+  apt:
+    update_cache: yes
+
+- name: Stop service systemd-resolved on debian, if running
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: stopped
+    enabled: no
+
+- name: Remove default resolv.conf
+  ansible.builtin.file:
+    path: /etc/resolv.conf
+    state: absent
+
+- name: Add a line to a file if the file does not exist, without passing regexp
+  ansible.builtin.lineinfile:
+    path: /etc/resolv.conf
+    line: nameserver 8.8.8.8
+    create: yes
+
+- name: Ensure dnsmasq is installed.
+  apt:
+    name: "{{item}}"
+    state: present
+  loop:
+    - dns-root-data
+    - dnsmasq
+    - dnsmasq-base
+    - libidn11
+
+- name: Ensure dnsmasq is running
+  ansible.builtin.service:
+    name: dnsmasq
+    state: started
+    enabled: yes
+
+- name: Copy dnsmasq config
+  template:
+    src: dnsmasq.conf.j2
+    dest: /etc/dnsmasq.conf
+    mode: '0644'
+  notify:
+    - restart dnsmasq
+
+- name: Add dnsmask to resolv.conf
+  ansible.builtin.lineinfile:
+    path: /etc/resolv.conf
+    line: nameserver 127.0.0.1
+    insertbefore: BOF

@@ -1,0 +1,30 @@
+---
+- name: SkillFactory 10.9.2
+  hosts: [vm]
+  become: true
+  become_user: root
+  vars:
+    superusers:
+      user1: password1
+      user2: password2
+  tasks:
+  - name: Ensure group "superuser" exists
+    ansible.builtin.group:
+      name: superuser
+      state: present
+
+  - name: Ensure "superuser" group have sudo rights
+    ansible.builtin.lineinfile:
+      path: /etc/sudoers
+      state: present
+      line: "%superuser  ALL=(ALL:ALL) ALL"
+      validate: /usr/sbin/visudo -cf %s
+
+  - name: Create user accounts and add users to groups
+    user:
+      name: "{{item.key}}"
+      shell: /bin/bash
+      groups: "superuser"
+      password: "{{item.value | password_hash('sha512')}}"
+    loop: "{{ superusers | dict2items }}"
+
