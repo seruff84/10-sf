@@ -7,14 +7,8 @@
     state: present
   loop:
     - nginx
-    - php-common
-    - php7.4-cli
-    - php7.4-common
     - php7.4-fpm
-    - php7.4-json
-    - php7.4-opcache
-    - php7.4-readline
-    -
+
 - name: Ensure service is running
   ansible.builtin.service:
     name: "{{item}}"
