@@ -37,6 +37,7 @@
     - reload nginx
 
 ############## #4 ADDON TO P.3 ####################
+
 - name: Create a directory if it does not exist
   ansible.builtin.file:
     path: /opt/nginx/ansible/
@@ -44,8 +45,8 @@
     mode: '0755'
     owner: www-data
     group: www-data
-- name: Copy index.php to new locatin
 
+- name: Copy index.php to new locatin
   copy:
     src: index.php
     dest: /opt/nginx/ansible/
