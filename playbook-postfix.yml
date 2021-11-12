@@ -1,0 +1,35 @@
+---
+- name: SkillFactory 10.5
+  hosts: [vm]
+  become: true
+  become_user: root
+  tasks:
+  - name: Ensure postfix is installed.
+    apt:
+      name: postfix
+      state: present
+    tags: init postfix
+
+  - name: Ensure postfix is running
+    ansible.builtin.service:
+      name: postfix
+      state: started
+      enabled: yes
+    tags: init postfix
+
+  - name: Ensure postfix is stoped
+    ansible.builtin.service:
+      name: postfix
+      state: stopped
+    tags: drop postfix
+
+  - name: Remove "Postfix" package
+    apt:
+      name: postfix
+      state: absent
+    tags: drop postfix
+
+  - name: Remove dependencies that are no longer required
+    apt:
+      autoremove: yes
+    tags: drop postfix
