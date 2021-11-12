@@ -1,0 +1,7 @@
+---
+- name: SkillFactory 10.5
+  hosts: [vm]
+  become: true
+  become_user: root
+  roles:
+    - vsftp

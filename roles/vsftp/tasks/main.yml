@@ -1,0 +1,22 @@
+---
+# tasks file for vsftp
+- name: Ensure vsftp is installed.
+  apt:
+    name: vsftpd
+    state: present
+
+- name: Ensure vsftp is running
+  ansible.builtin.service:
+    name: vsftpd
+    state: started
+    enabled: yes
+
+- name: Copy vsftp config
+  copy:
+    src: vsftpd.conf
+    dest: /etc
+    mode: '0644'
+  notify:
+    - restart vsftp
+
+
